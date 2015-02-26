@@ -1,0 +1,96 @@
+$blue: #236aa2;
+$light-blue: #f2f5f7;
+$radius: 3px;
+
+.qw-dnd-upload {
+  position: relative;
+  width: 350px;
+  height: 175px;
+
+  border-radius: $radius;
+  background: #f3f3f3;
+  background: $light-blue;
+  cursor: pointer;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  > .hint {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding-top: 55px;
+
+    > img {
+      display: block;
+      margin: 0 auto;
+    }
+
+    > span {
+      display: block;
+      color: $blue;
+      margin: 0 auto;
+      text-align: center;
+    }
+  }
+
+  > .container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    padding: $radius;
+
+    .upload {
+      position: relative;
+      height: 25px;
+      background: #fff;
+      border: 1px solid #ccc;
+      margin-bottom: $radius;
+      border-radius: $radius;
+
+      span.title {
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        display: block;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: $radius;
+        font-size: 12px;
+      }
+
+      div.progress {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0;
+        max-width: calc(100% - #{$radius});
+
+        background-color: $light-blue;
+        background-color: $blue;
+
+        color: white;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: clip;
+        padding: $radius;
+        font-size: 12px;
+        height: 19px;
+        border-radius: $radius;
+      }
+    }
+  }
+}
+
+// <div class="upload">
+//   <span class="title"></span>
+//   <div class="progress"></div>
+// </div>
