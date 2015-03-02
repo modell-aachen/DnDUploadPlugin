@@ -41,10 +41,16 @@ sub tagUpload {
   my $class = $params->{extraclass} || '';
   my $autostart = $params->{autostart} || 'on';
   my $qr = $params->{qrcode};
+  my $webtopic = $params->{webtopic} || '';
 
-  $web = $params->{web} || $web;
-  $topic = $params->{topic} || $topic;
-  ($web, $topic) = Foswiki::Func::normalizeWebTopicName( $web, $topic );
+
+  if ( !$webtopic ) {
+    $web = $params->{web} || $web;
+    $topic = $params->{topic} || $topic;
+    ($web, $topic) = Foswiki::Func::normalizeWebTopicName( $web, $topic );
+  } else {
+    ($web, $topic) = Foswiki::Func::normalizeWebTopicName( undef, $webtopic );
+  }
 
   if ( $qr && $qr =~ m/^(on|1|enabled|true)$/i ) {
     $qr = 'qr';
