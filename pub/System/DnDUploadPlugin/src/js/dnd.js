@@ -2,40 +2,73 @@
   'use strict';
 
   $(document).ready( function() {
-    $('.qw-dnd-upload').each( function() {
-      var $this = $(this);
-      var id = $this.attr('data-id');
-
-      var input = [
-        '<input class="qw-file-input" data-id="',
-        id,
-        '" type="file" style="display: none" multiple="multiple">'
-      ].join('');
-
-      var $input = $(input);
-      $input.appendTo($('body'));
-      $input.on( 'change', onInputChanged );
-      $this.on( 'click', showFilePicker );
-
-      $this[0].ondragover = function( evt ) {
-        evt.preventDefault();
-      };
-
-      $this[0].ondrop = function( evt ) {
-        evt.preventDefault();
-        var files = evt.dataTransfer.files;
-        $.each( evt.dataTransfer.files, function( file ) {
-          enqueueFile( this, id );
-        });
-      };
-    });
+    $('.qw-dnd-upload').each( handleDnDUpload );
   });
 
+  var handleDnDUpload = function() {
+    var $this = $(this);
+    var id = $this.attr('data-id');
+
+    var input = [
+      '<input class="qw-file-input" data-id="',
+      id,
+      '" type="file" style="visibility: hidden" multiple="multiple">'
+    ].join('');
+
+    var $input = $(input);
+    $input.appendTo($('body'));
+    $input.appendTo($this);
+    $input.on( 'change', onInputChanged );
+    $this.on( 'click', showFilePicker );
+
+    $this[0].ondragover = function( evt ) {
+      evt.preventDefault();
+    };
+
+    $this[0].ondrop = function( evt ) {
+      evt.preventDefault();
+      var files = evt.dataTransfer.files;
+      $.each( evt.dataTransfer.files, function( file ) {
+        enqueueFile( this, id );
+      });
+    };
+
+    if ( /^1$/.test( $this.attr('data-tasksgrid') ) ) {
+      var $editor = $this.closest('.task-editor');
+      var trackerId = $editor.attr('id').replace('task-editor-', '');
+      var $tracker = $('#' + trackerId);
+      $tracker.on( 'beforeEdit', function( evt, task ) {
+        var taskId = task.id;
+        var arr = taskId.split('.');
+        $this.attr('data-web', arr[0]);
+        $this.attr('data-topic', arr[1]);
+      });
+
+      $tracker.on( 'beforeCreate', function() {
+        $editor.find('.twistyPlugin').css('display', 'none');
+      });
+
+      $tracker.on( 'afterSave', function() {
+        $editor.find('.twistyPlugin').css('display', 'block');
+      });
+
+      $tracker.on( 'editCanceled', function() {
+        $editor.find('.twistyPlugin').css('display', 'block');
+      });
+    }
+  };
+
   var showFilePicker = function( evt ) {
+    if ( $(evt.target).hasClass('qw-file-input') ) {
+      return;
+    }
+
     var $this = $(this);
     var id = $this.attr('data-id');
     var $input = $('.qw-file-input[data-id="' + id + '"]');
     $input.trigger('click');
+
+    evt.preventDefault();
   };
 
   var onInputChanged = function( evt ) {
@@ -139,7 +172,7 @@
 
     var sel = '.qw-dnd-upload[data-id="' + id + '"]';
     return $(sel).hasClass('auto');
-  }
+  };
 
   var getWebTopic = function( id ) {
     var sel = '.qw-dnd-upload[data-id="' + id + '"]';
@@ -148,6 +181,8 @@
       web: $cnt.attr('data-web'),
       topic: $cnt.attr('data-topic')
     };
+
+console.log(data);
 
     return data;
   };

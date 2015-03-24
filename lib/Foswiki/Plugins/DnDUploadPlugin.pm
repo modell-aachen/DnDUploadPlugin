@@ -41,6 +41,7 @@ sub tagUpload {
   my $class = $params->{extraclass} || '';
   my $autostart = $params->{autostart} || 'on';
   my $qr = $params->{qrcode};
+  my $tasksGrid = $params->{tasksgrid} || 0;
   my $webtopic = $params->{webtopic} || '';
 
 
@@ -84,7 +85,7 @@ STYLE
 
   $id++;
   my $div = <<DIV;
-<div class="qw-dnd-upload $class $qr $autostart" $style data-id="$id" data-web="$web" data-topic="$topic">
+<div class="qw-dnd-upload $class $qr $autostart" $style data-id="$id" data-web="$web" data-topic="$topic" data-tasksgrid="$tasksGrid">
   <div class="hint">
     <img src="$pluginURL/assets/upload.png" border="0" width="32" height="32" />
     <span>%MAKETEXT{"Click or drag'n drop"}%</span>
