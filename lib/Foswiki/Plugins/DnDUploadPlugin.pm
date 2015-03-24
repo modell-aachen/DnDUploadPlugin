@@ -40,10 +40,9 @@ sub tagUpload {
   my $height = $params ->{height} || '';
   my $class = $params->{extraclass} || '';
   my $autostart = $params->{autostart} || 'on';
-  my $qr = $params->{qrcode};
+  my $qr = $params->{qrcode} || 0;
   my $tasksGrid = $params->{tasksgrid} || 0;
   my $webtopic = $params->{webtopic} || '';
-
 
   if ( !$webtopic ) {
     $web = $params->{web} || $web;
@@ -63,6 +62,12 @@ sub tagUpload {
     $autostart = 'auto';
   } else {
     $autostart = '';
+  }
+
+  if ( $tasksGrid && $tasksGrid =~ m/^(on|1|enabled|true)$/i ) {
+    $tasksGrid = '1';
+  } else {
+    $tasksGrid = '0';
   }
 
   my $style = '';
