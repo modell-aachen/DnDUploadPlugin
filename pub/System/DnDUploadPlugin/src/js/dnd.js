@@ -23,11 +23,13 @@
     }
 
     return this.each( function() {
-      var id = $(this).attr('data-id');
+      var $this = $(this);
+      var id = $this.attr('data-id');
       files[id] = [];
+      $this.find('.container').empty();
 
       // invoke to trigger the 'queueEmpty' event...
-      if ( suppressEvent || typeof suppressEvent === typeof undefined ) {
+      if ( !suppressEvent && typeof suppressEvent !== typeof undefined ) {
         uploadNext(id);
       }
     });
@@ -140,6 +142,7 @@
       var empty = $.Event( 'queueEmpty' );
       var $dnd = $('.qw-dnd-upload[data-id="' + id + '"]');
       $dnd.trigger( empty, this );
+      $dnd.find('.container').empty();
 
       return;
     }
