@@ -5,6 +5,34 @@
     $('.qw-dnd-upload').each( handleDnDUpload );
   });
 
+  $.fn.upload = function() {
+    if ( !this.hasClass('qw-dnd-upload') ) {
+      return this;
+    }
+
+    return this.each( function() {
+      var $this = $(this);
+      $this.addClass('auto');
+      uploadNext( $this.attr('data-id') );
+    });
+  };
+
+  $.fn.clearQueue = function( suppressEvent ) {
+    if ( !this.hasClass('qw-dnd-upload') ) {
+      return this;
+    }
+
+    return this.each( function() {
+      var id = $(this).attr('data-id');
+      files[id] = [];
+
+      // invoke to trigger the 'queueEmpty' event...
+      if ( suppressEvent || typeof suppressEvent === typeof undefined ) {
+        uploadNext(id);
+      }
+    });
+  };
+
   var handleDnDUpload = function() {
     var $this = $(this);
     var id = $this.attr('data-id');
@@ -109,6 +137,10 @@
     var data = files[id].shift();
 
     if ( typeof data === 'undefined' ) {
+      var empty = $.Event( 'queueEmpty' );
+      var $dnd = $('.qw-dnd-upload[data-id="' + id + '"]');
+      $dnd.trigger( empty, this );
+
       return;
     }
 
@@ -181,8 +213,6 @@
       web: $cnt.attr('data-web'),
       topic: $cnt.attr('data-topic')
     };
-
-console.log(data);
 
     return data;
   };

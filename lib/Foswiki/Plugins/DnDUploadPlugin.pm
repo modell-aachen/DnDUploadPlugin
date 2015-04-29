@@ -39,7 +39,7 @@ sub tagUpload {
   my $width = $params->{width} || '';
   my $height = $params ->{height} || '';
   my $class = $params->{extraclass} || '';
-  my $autostart = $params->{autostart} || 'on';
+  my $autostart = $params->{autostart};
   my $qr = $params->{qrcode} || 0;
   my $tasksGrid = $params->{tasksgrid} || 0;
   my $webtopic = $params->{webtopic} || '';
@@ -58,6 +58,7 @@ sub tagUpload {
     $qr = '';
   }
 
+  $autostart = 'on' unless defined $autostart;
   if ( $autostart && $autostart =~ m/^(on|1|enabled|true)$/i ) {
     $autostart = 'auto';
   } else {
