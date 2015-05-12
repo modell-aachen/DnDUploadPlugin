@@ -136,6 +136,10 @@
   };
 
   var uploadNext = function( id ) {
+    if ( typeof files[id] === 'undefined' ) {
+      return;
+    }
+
     var data = files[id].shift();
 
     if ( typeof data === 'undefined' ) {
