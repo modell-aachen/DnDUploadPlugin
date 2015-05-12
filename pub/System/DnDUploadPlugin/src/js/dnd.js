@@ -136,13 +136,7 @@
   };
 
   var uploadNext = function( id ) {
-    if ( typeof files[id] === 'undefined' ) {
-      return;
-    }
-
-    var data = files[id].shift();
-
-    if ( typeof data === 'undefined' ) {
+    if ( typeof files[id] === 'undefined' || files[id].length === 0 ) {
       var empty = $.Event( 'queueEmpty' );
       var $dnd = $('.qw-dnd-upload[data-id="' + id + '"]');
       $dnd.trigger( empty, this );
@@ -151,6 +145,7 @@
       return;
     }
 
+    var data = files[id].shift();
     var payload = new FormData();
     payload.append("filepath", data.file);
     payload.append("filename", data.file.name);
