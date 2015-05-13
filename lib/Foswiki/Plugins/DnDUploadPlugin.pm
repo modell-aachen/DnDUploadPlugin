@@ -85,7 +85,7 @@ sub tagUpload {
 <script type="text/javascript" src="$pluginURL/js/dndupload$suffix.js"></script>
 SCRIPT
 
-  Foswiki::Func::addToZone( 'head', 'DNDUPLOADPLUGIN::SCRIPTS', <<STYLE );
+  Foswiki::Func::addToZone( 'head', 'DNDUPLOADPLUGIN::STYLES', <<STYLE );
 <link rel='stylesheet' type='text/css' media='all' href='$pluginURL/css/dndupload$suffix.css' />
 STYLE
 
