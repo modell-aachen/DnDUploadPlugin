@@ -3,6 +3,12 @@
 
   $(document).ready( function() {
     $('.qw-dnd-upload').each( handleDnDUpload );
+
+    if ( typeof $().observe === 'function' ) {
+      $('body').observe('added', '.qw-dnd-upload', function(rec) {
+        handleDnDUpload.call( $(rec.target).find('.qw-dnd-upload') );
+      });
+    }
   });
 
   $.fn.upload = function() {
@@ -64,8 +70,8 @@
     };
 
     if ( /^1$/.test( $this.attr('data-tasksgrid') ) ) {
-      var $editor = $this.closest('.task-editor');
-      var trackerId = $editor.attr('id').replace('task-editor-', '');
+      var $editor = $('#task-editor');
+      var trackerId = $editor.data('trackerId');
       var $tracker = $('#' + trackerId);
       $tracker.on( 'beforeEdit', function( evt, task ) {
         var taskId = task.id;
