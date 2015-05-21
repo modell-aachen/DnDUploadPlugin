@@ -2,6 +2,7 @@
 data/System/DnDUploadPlugin.txt 0644 Plugin doc
 lib/Foswiki/Plugins/DnDUploadPlugin.pm 0444 Plugin Perl module
 lib/Foswiki/Plugins/DnDUploadPlugin/Config.spec 0644 Configuration
+locale/DnDUploadPlugin/de.po 0644
 pub/System/DnDUploadPlugin/js/dndupload.js 0444 Scripts
 pub/System/DnDUploadPlugin/js/dndupload.min.js 0444 Scripts
 pub/System/DnDUploadPlugin/css/dndupload.css 0444 Styles
