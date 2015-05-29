@@ -1,0 +1,66 @@
+%META:TOPICPARENT{name="Plugins"}%
+---+ DnDUploadPlugin Plugin
+
+%SHORTDESCRIPTION%
+
+%TOC%
+
+<br />
+---++ Installation
+%$INSTALL_INSTRUCTIONS%
+
+<br />
+---++ Usage
+<verbatim>
+%DNDUPLOAD{
+  autostart="..."
+  extraclass="..."
+  height="..."
+  qrcode="..."
+  tasksgrid="..."
+  webtopic="..."
+  width="..."
+}%
+</verbatim>
+
+| *Parameter* | *Description* | *Default* |
+| autostart | a boolean value to determine whether uploads should start automatically (not implemented yet) | 1 |
+| extraclass | extra stylesheet applied to the upload area | |
+| height | the height of the upload area | |
+| qrcode | a boolean value to determine whether to show a qr code to the current upload target (not implemented yet) | 0 |
+| tasksgrid | ActionTracker 2.0 compatibility | 0 |
+| webtopic | the web.topic to which attachments are sent | |
+| width | the width of the upload area | |
+<br />
+*Note*
+
+If _autostart_ is disabled you have to call _$.fn.upload_ on top of the according DOM element, e.g.
+<verbatim>
+$('.qw-dnd-upload').upload();
+</verbatim>
+
+To determine whether all uploads have finished you may subscribe to the _queueEmpty_ event.
+<verbatim>
+$('.qw-dnd-upload').on('queueEmpty', function() {
+   console.log('done...');
+});
+</verbatim>
+
+In order to clear the current queue of an upload area invoke _$.fn.clearQueue(suppressEvent: boolean)_.
+<verbatim>
+var suppressQueueEmptyEvent = true;
+$('.qw-dnd-upload').clearQueue( suppressQueueEmptyEvent );
+</verbatim>
+
+
+<br />
+---++ Plugin Info
+
+| Author: | Foswiki:Main.SvenMeyer |
+| Copyright: | &copy; 2015, Modell Aachen GmbH |
+| License: | GPL ([[http://www.gnu.org/copyleft/gpl.html][GNU General Public License]]) |
+| Release: | %$RELEASE% |
+| Version: | %$VERSION% |
+| Home: | http://www.modell-aachen.de |
+| Support: | http://www.modell-aachen.de |
+
