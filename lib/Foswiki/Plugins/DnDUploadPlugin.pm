@@ -6,6 +6,7 @@ use warnings;
 use Digest::MD5;
 use Foswiki::Func;
 use Foswiki::Plugins;
+use Foswiki::Plugins::JQueryPlugin;
 
 use version;
 our $VERSION = version->declare( '1.0.0' );
@@ -40,6 +41,7 @@ sub tagUpload {
   my $height = $params ->{height} || '';
   my $class = $params->{extraclass} || '';
   my $autostart = $params->{autostart};
+  my $blockui = $params->{blockui} || 0;
   my $qr = $params->{qrcode} || 0;
   my $tasksGrid = $params->{tasksgrid} || 0;
   my $webtopic = $params->{webtopic} || '';
@@ -89,6 +91,10 @@ sub tagUpload {
     $style = 'style="' . join(';', @styles) . '"';
   }
 
+  if ($blockui) {
+    Foswiki::Plugins::JQueryPlugin::createPlugin('blockui');
+  }
+
   my $debug = $Foswiki::cfg{Plugins}{DnDUploadPlugin}{Debug} || 0;
   my $suffix = $debug ? '' : '.min';
   my $pluginURL = '%PUBURLPATH%/%SYSTEMWEB%/DnDUploadPlugin';
@@ -102,7 +108,7 @@ STYLE
 
   $id++;
   my $div = <<DIV;
-<div class="qw-dnd-upload $class $qr $autostart" $style data-id="$id" data-web="$web" data-topic="$topic" data-tasksgrid="$tasksGrid">
+<div class="qw-dnd-upload $class $qr $autostart" $style data-id="$id" data-web="$web" data-topic="$topic" data-tasksgrid="$tasksGrid" data-blockui="$blockui">
   <div class="hint">
     <img src="$pluginURL/assets/upload.png" border="0" width="32" height="32" />
     <span>%MAKETEXT{"Click or drag'n drop"}%</span>
