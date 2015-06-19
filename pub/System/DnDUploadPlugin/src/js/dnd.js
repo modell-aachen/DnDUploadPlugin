@@ -141,16 +141,34 @@
     }
   };
 
+  var lock;
+  var locked = false;
+  var uiBlocked = false;
   var uploadNext = function( id ) {
+    var $dnd = $('.qw-dnd-upload[data-id="' + id + '"]');
     if ( typeof files[id] === 'undefined' || files[id].length === 0 ) {
       var empty = $.Event( 'queueEmpty' );
-      var $dnd = $('.qw-dnd-upload[data-id="' + id + '"]');
       $dnd.trigger( empty, this );
       $dnd.find('.container').empty();
+      locked = false;
+      if ($dnd.data('blockui') && typeof $.unblockUI === 'function') {
+        $.unblockUI();
+        uiBlocked = false;
+      }
 
       return;
     }
 
+    if (locked) {
+      return;
+    }
+
+    if ($dnd.data('blockui') && typeof $.blockUI === 'function' && !uiBlocked) {
+      $.blockUI();
+      uiBlocked = true;
+    }
+
+    locked = true;
     var data = files[id].shift();
     var payload = new FormData();
     payload.append("filepath", data.file);
@@ -158,6 +176,7 @@
     payload.append("filecomment", '');
 
     var client = new XMLHttpRequest();
+    client.widthCredentials = true;
     client.onerror = error;
     client.onabort = log;
 
@@ -170,9 +189,16 @@
 
       // continue with next file
       if ( val === 100 ) {
-        if ( isAutoUpload( id ) ) {
-          uploadNext( id );
-        }
+        lock = setInterval(function() {
+          if (client.readyState === 4) {
+            clearInterval(lock);
+            locked = false;
+
+            if ( isAutoUpload( id ) ) {
+              uploadNext( id );
+            }
+          }
+        }, 100);
       }
     };
 
