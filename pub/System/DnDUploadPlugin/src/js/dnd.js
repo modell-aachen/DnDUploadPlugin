@@ -176,7 +176,7 @@
     payload.append("filecomment", '');
 
     var client = new XMLHttpRequest();
-    client.widthCredentials = true;
+    client.withCredentials = true;
     client.onerror = error;
     client.onabort = log;
 
