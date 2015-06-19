@@ -71,11 +71,22 @@ sub tagUpload {
     $tasksGrid = '0';
   }
 
+  my @styles = ();
+  if ($width) {
+    my $str = "width: $width";
+    $str .= 'px' if $width =~ /^\d+$/;
+    push(@styles, $str);
+  }
+
+  if ($height) {
+    my $str = "height: $height";
+    $str .= 'px' if $height =~ /^\d+$/;
+    push(@styles, $str);
+  }
+
   my $style = '';
-  if ( $width && $height ) {
-    $width .= 'px' if ( $width =~ m/^\d+$/ );
-    $height .= 'px' if ( $height =~ m/^\d+$/ );
-    $style = "style=\"width: $width; height: $height;\"";
+  if (scalar @styles) {
+    $style = 'style="' . join(';', @styles) . '"';
   }
 
   my $debug = $Foswiki::cfg{Plugins}{DnDUploadPlugin}{Debug} || 0;
