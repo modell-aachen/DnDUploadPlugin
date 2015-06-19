@@ -25,12 +25,13 @@
 
 | *Parameter* | *Description* | *Default* |
 | autostart | a boolean value to determine whether uploads should start automatically (not implemented yet) | 1 |
+| blockui | a boolean to value to determine whether to block user interaction during an ongoing upload | 0 |
 | extraclass | extra stylesheet applied to the upload area | |
-| height | the height of the upload area | |
+| height | the height of the upload area (either px or %) | |
 | qrcode | a boolean value to determine whether to show a qr code to the current upload target (not implemented yet) | 0 |
 | tasksgrid | ActionTracker 2.0 compatibility | 0 |
 | webtopic | the web.topic to which attachments are sent | |
-| width | the width of the upload area | |
+| width | the width of the upload area (either px or %) | |
 <br />
 *Note*
 
