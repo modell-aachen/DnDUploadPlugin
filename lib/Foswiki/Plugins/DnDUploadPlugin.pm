@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use Digest::MD5;
+use Digest::SHA;
 use Foswiki::Func;
 use Foswiki::Plugins;
 use Foswiki::Plugins::JQueryPlugin;
@@ -13,7 +14,6 @@ our $VERSION = version->declare( '1.0.0' );
 our $RELEASE = '1.0.0';
 our $NO_PREFS_IN_TOPIC = 1;
 our $SHORTDESCRIPTION = "Drag'n drop uploads";
-my $id = 0;
 
 sub initPlugin {
   my ( $topic, $web, $user, $installWeb ) = @_;
@@ -106,12 +106,13 @@ SCRIPT
 <link rel='stylesheet' type='text/css' media='all' href='$pluginURL/css/dndupload$suffix.css' />
 STYLE
 
-  $id++;
+  my $id = Digest::SHA::sha1_hex(time . rand(99999));
   my $div = <<DIV;
 <div class="qw-dnd-upload $class $qr $autostart" $style data-id="$id" data-web="$web" data-topic="$topic" data-tasksgrid="$tasksGrid" data-blockui="$blockui">
   <div class="hint">
     <img src="$pluginURL/assets/upload.png" border="0" width="32" height="32" />
     <span>%MAKETEXT{"Click or drag'n drop"}%</span>
+    <input class="qw-file-input" type="file" style="visibility: hidden" multiple="multiple">
   </div>
   <div class="container"></div>
 </div>

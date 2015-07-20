@@ -2,13 +2,10 @@
   'use strict';
 
   $(document).ready( function() {
-    $('.qw-dnd-upload').each( handleDnDUpload );
-
-    if ( typeof $().observe === 'function' ) {
-      $('body').observe('added', '.qw-dnd-upload', function(rec) {
-        handleDnDUpload.call( $(rec.target).find('.qw-dnd-upload') );
-      });
-    }
+    $('body').on('click', '.qw-dnd-upload', handleDnDUpload);
+    $('body').on('dragover', '.qw-dnd-upload', onDrag);
+    $('body').on('dragleave', '.qw-dnd-upload', onDrag);
+    $('body').on('drop', '.qw-dnd-upload', onDrop);
   });
 
   $.fn.upload = function() {
@@ -19,7 +16,7 @@
     return this.each( function() {
       var $this = $(this);
       $this.addClass('auto');
-      uploadNext( $this.attr('data-id') );
+      uploadNext( $this.data('id') || $this.attr('data-id') );
     });
   };
 
@@ -30,7 +27,7 @@
 
     return this.each( function() {
       var $this = $(this);
-      var id = $this.attr('data-id');
+      var id = $this.data('id') || $this.attr('data-id');
       files[id] = [];
       $this.find('.container').empty();
 
@@ -41,35 +38,32 @@
     });
   };
 
-  var handleDnDUpload = function() {
+  var onDrag = function(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
+  };
+
+  var onDrop = function(evt) {
+    evt.preventDefault();
+    evt.stopPropagation();
     var $this = $(this);
-    var id = $this.attr('data-id');
+    var e = evt.originalEvent;
+    $.each( e.dataTransfer.files, function( file ) {
+      enqueueFile( this, $this.data('id') || $this.attr('data-id') );
+    });
+  };
 
-    var input = [
-      '<input class="qw-file-input" data-id="',
-      id,
-      '" type="file" style="visibility: hidden" multiple="multiple">'
-    ].join('');
+  var handleDnDUpload = function(evt) {
+    var $this = $(this);
+    if ( $(evt.target).hasClass('qw-file-input') ) {
+      return;
+    }
 
-    var $input = $(input);
-    $input.appendTo($('body'));
-    $input.appendTo($this);
+    var $input = $this.find('input');
+    $input.off( 'change', onInputChanged );
     $input.on( 'change', onInputChanged );
-    $this.on( 'click', showFilePicker );
 
-    $this[0].ondragover = function( evt ) {
-      evt.preventDefault();
-    };
-
-    $this[0].ondrop = function( evt ) {
-      evt.preventDefault();
-      var files = evt.dataTransfer.files;
-      $.each( evt.dataTransfer.files, function( file ) {
-        enqueueFile( this, id );
-      });
-    };
-
-    if ( /^1$/.test( $this.attr('data-tasksgrid') ) ) {
+    if ( /^(1|on|true|enabled?)$/i.test( $this.attr('data-tasksgrid') ) ) {
       var $editor = $('#task-editor');
       var trackerId = $editor.data('trackerId');
       var $tracker = $('#' + trackerId);
@@ -92,24 +86,19 @@
         $editor.find('.twistyPlugin').css('display', 'block');
       });
     }
-  };
 
-  var showFilePicker = function( evt ) {
-    if ( $(evt.target).hasClass('qw-file-input') ) {
-      return;
-    }
-
-    var $this = $(this);
-    var id = $this.attr('data-id');
-    var $input = $('.qw-file-input[data-id="' + id + '"]');
-    $input.trigger('click');
+    setTimeout(function() {
+      $input.trigger('click');
+    }, 10);
 
     evt.preventDefault();
+    return false;
   };
 
   var onInputChanged = function( evt ) {
     var $this = $(this);
-    var id = $this.attr('data-id');
+    var $dnd = $this.closest('.qw-dnd-upload');
+    var id = $dnd.data('id') || $dnd.attr('data-id');
 
     $.each( this.files, function() {
       enqueueFile( this, id );
