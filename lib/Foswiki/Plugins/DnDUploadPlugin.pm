@@ -42,7 +42,6 @@ sub tagUpload {
   my $class = $params->{extraclass} || '';
   my $autostart = $params->{autostart};
   my $blockui = $params->{blockui} || 0;
-  my $qr = $params->{qrcode} || 0;
   my $tasksGrid = $params->{tasksgrid} || 0;
   my $webtopic = $params->{webtopic} || '';
 
@@ -52,12 +51,6 @@ sub tagUpload {
     ($web, $topic) = Foswiki::Func::normalizeWebTopicName( $web, $topic );
   } else {
     ($web, $topic) = Foswiki::Func::normalizeWebTopicName( undef, $webtopic );
-  }
-
-  if ( $qr && $qr =~ m/^(on|1|enabled|true)$/i ) {
-    $qr = 'qr';
-  } else {
-    $qr = '';
   }
 
   $autostart = 'on' unless defined $autostart;
@@ -108,7 +101,7 @@ STYLE
 
   my $id = Digest::SHA::sha1_hex(time . rand(99999));
   my $div = <<DIV;
-<div class="qw-dnd-upload $class $qr $autostart" $style data-id="$id" data-web="$web" data-topic="$topic" data-tasksgrid="$tasksGrid" data-blockui="$blockui">
+<div class="qw-dnd-upload $class $autostart" $style data-id="$id" data-web="$web" data-topic="$topic" data-tasksgrid="$tasksGrid" data-blockui="$blockui">
   <div class="hint">
     <img src="$pluginURL/assets/upload.png" border="0" width="32" height="32" />
     <span>%MAKETEXT{"Click or drag'n drop"}%</span>

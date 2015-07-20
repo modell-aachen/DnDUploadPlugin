@@ -17,8 +17,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "devDependencies": {
-    "qrcode.js": "https://github.com/davidshimjs/qrcodejs.git"
-  }
+  ]
 }

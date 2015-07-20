@@ -47,7 +47,6 @@ module.exports = function(grunt) {
         },
         files: {
           '<%= pkg.pubDir %>/js/dndupload.js': [
-            '<%= pkg.bower %>/qrcode.js/qrcode.js',
             '<%= pkg.pubDir %>/src/js/dnd.js'
           ]
         }
@@ -60,7 +59,6 @@ module.exports = function(grunt) {
         },
         files: [{
           '<%= pkg.pubDir %>/js/dndupload.min.js': [
-            '<%= pkg.bower %>/qrcode.js/qrcode.js',
             '<%= pkg.pubDir %>/src/js/dnd.js'
           ],
         }]
