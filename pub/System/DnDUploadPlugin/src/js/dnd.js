@@ -55,8 +55,31 @@
 
   var handleDnDUpload = function(evt) {
     var $this = $(this);
-    if ( $(evt.target).hasClass('qw-file-input') ) {
-      return;
+
+    var isCancel = $(evt.target).hasClass('qw-dnd-cancel');
+    var isInput = $(evt.target).hasClass('qw-file-input');
+
+    if ( isCancel ) {
+      var $container = $(evt.target).parent();
+      var fname = $container.text() || '';
+      var id = $this.data('id') || $this.attr('data-id');
+
+      if ( !fname ) {
+        return false;
+      }
+
+      for (var i = 0; i < files[id].length; ++i) {
+        var file = files[id][i];
+        if ( file.file.name === fname ) {
+          files[id].splice(i, 1);
+          $container.remove();
+          return false;
+        }
+      }
+
+      return false;
+    } if ( isInput ) {
+      return; // just exit here, do not stop propagation
     }
 
     var $input = $this.find('input');
@@ -111,11 +134,8 @@
       files[id] = [];
     }
 
-    var container = '<div class="upload"><span class="title"></span><div class="progress"></div></div>';
-    var $container = $(container);
-    $container.children().each( function() {
-      $(this).text( file.name );
-    });
+    var $container = $('<div class="upload"><span class="title"></span><div class="progress"></div></div>');
+    $container.children('.title').text( file.name );
 
     var data = {
       file: file,
@@ -127,6 +147,8 @@
 
     if ( isAutoUpload( id ) ) {
       uploadNext( id );
+    } else {
+      $container.append($('<span class="qw-dnd-cancel"></span>'));
     }
   };
 

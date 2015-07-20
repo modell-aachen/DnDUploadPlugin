@@ -90,6 +90,17 @@ $radius: 3px;
   }
 }
 
+.qw-dnd-cancel {
+  background-image: url('../assets/cancel.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  height:16px;
+  width:16px;
+  float: right;
+  clear: right;
+  margin: 4px 6px 0 0;
+}
+
 // <div class="upload">
 //   <span class="title"></span>
 //   <div class="progress"></div>

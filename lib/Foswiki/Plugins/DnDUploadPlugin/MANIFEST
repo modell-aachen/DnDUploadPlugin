@@ -8,3 +8,4 @@ pub/System/DnDUploadPlugin/js/dndupload.min.js 0444 Scripts
 pub/System/DnDUploadPlugin/css/dndupload.css 0444 Styles
 pub/System/DnDUploadPlugin/css/dndupload.min.css 0444 Styles
 pub/System/DnDUploadPlugin/assets/upload.png 0444 upload hint
+pub/System/DnDUploadPlugin/assets/cancel.png 0444 cancel icon
