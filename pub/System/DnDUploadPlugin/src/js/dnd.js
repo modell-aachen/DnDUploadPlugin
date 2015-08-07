@@ -187,7 +187,6 @@
     payload.append("filecomment", '');
 
     var client = new XMLHttpRequest();
-    client.withCredentials = true;
     client.onerror = error;
     client.onabort = log;
 
@@ -238,6 +237,7 @@
     $.get( keyurl, function( key ) {
       payload.append("validation_key", key);
       client.open( "POST", uploadurl );
+      client.withCredentials = true;
       client.send( payload );
     });
   };
