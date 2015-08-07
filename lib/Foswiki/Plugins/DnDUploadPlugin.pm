@@ -91,7 +91,7 @@ sub tagUpload {
   my $debug = $Foswiki::cfg{Plugins}{DnDUploadPlugin}{Debug} || 0;
   my $suffix = $debug ? '' : '.min';
   my $pluginURL = '%PUBURLPATH%/%SYSTEMWEB%/DnDUploadPlugin';
-  Foswiki::Func::addToZone( 'script', 'DNDUPLOADPLUGIN::SCRIPTS', <<SCRIPT );
+  Foswiki::Func::addToZone( 'script', 'DNDUPLOADPLUGIN::SCRIPTS', <<SCRIPT, 'JQUERYPLUGIN::FOSWIKI::PREFERENCES' );
 <script type="text/javascript" src="$pluginURL/js/dndupload$suffix.js"></script>
 SCRIPT
 
