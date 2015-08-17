@@ -1,0 +1,21 @@
+{
+  "name": "DnDUploadPlugin",
+  "version": "1.0.0",
+  "authors": [
+    "Modell Aachen GmbH"
+  ],
+  "description": "Drag'n drop upload for Q.Wiki",
+  "moduleType": [
+    "node"
+  ],
+  "license": "GPLv3",
+  "homepage": "http://www.modell-aachen.de",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

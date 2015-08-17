@@ -1,0 +1,2 @@
+msgid "Click or drag'n drop"
+msgstr "Klicken oder Drag & Drop"
