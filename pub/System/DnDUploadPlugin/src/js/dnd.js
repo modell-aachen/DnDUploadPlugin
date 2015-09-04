@@ -86,30 +86,6 @@
     $input.off( 'change', onInputChanged );
     $input.on( 'change', onInputChanged );
 
-    if ( /^(1|on|true|enabled?)$/i.test( $this.attr('data-tasksgrid') ) ) {
-      var $editor = $('#task-editor');
-      var trackerId = $editor.data('trackerId');
-      var $tracker = $('#' + trackerId);
-      $tracker.on( 'beforeEdit', function( evt, task ) {
-        var taskId = task.id;
-        var arr = taskId.split('.');
-        $this.attr('data-web', arr[0]);
-        $this.attr('data-topic', arr[1]);
-      });
-
-      $tracker.on( 'beforeCreate', function() {
-        $editor.find('.twistyPlugin').css('display', 'none');
-      });
-
-      $tracker.on( 'afterSave', function() {
-        $editor.find('.twistyPlugin').css('display', 'block');
-      });
-
-      $tracker.on( 'editCanceled', function() {
-        $editor.find('.twistyPlugin').css('display', 'block');
-      });
-    }
-
     setTimeout(function() {
       $input.trigger('click');
     }, 10);
