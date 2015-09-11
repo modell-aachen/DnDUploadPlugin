@@ -29,7 +29,7 @@
 | extraclass | extra stylesheet applied to the upload area | |
 | height | the height of the upload area (either px or %) | |
 | qrcode | a boolean value to determine whether to show a qr code to the current upload target (not implemented yet) | 0 |
-| tasksgrid | ActionTracker 2.0 compatibility | 0 |
+| tasksgrid | ActionTracker 2.0 compatibility. Set to '1' to use DnD uploads within AT2.0| 0 |
 | webtopic | the web.topic to which attachments are sent | |
 | width | the width of the upload area (either px or %) | |
 <br />

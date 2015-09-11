@@ -157,20 +157,20 @@
 
     locked = true;
     var data = files[id].shift();
+    var $container = $(data.container);
+    var p = foswiki.preferences;
     var payload = new FormData();
+
     payload.append("filepath", data.file);
     payload.append("filename", data.file.name);
-    payload.append("filecomment", '');
 
     var client = new XMLHttpRequest();
     client.onerror = error;
     client.onabort = log;
 
-    var $container = $(data.container);
     client.upload.onprogress = function( evt ) {
       var val = Math.round( 100/evt.total * evt.loaded );
       var percent = val + '%';
-
       $container.find('div.progress').css('width', percent);
 
       // continue with next file
@@ -189,33 +189,46 @@
     };
 
     var wt = getWebTopic( id );
-    var p = foswiki.preferences;
-    var keyurl = [
-      p.SCRIPTURLPATH,
-      '/rest',
-      p.SCRIPTTSUFFIX,
-      '/DnDUploadPlugin/validation?topic=',
-      wt.web,
-      '.',
-      wt.topic
-    ].join('');
+    if ( /^1$/.test($dnd.data('tasksgrid')) ) {
+      var attachurl = [
+        p.SCRIPTURLPATH,
+        '/rest',
+        p.SCRIPTTSUFFIX,
+        '/TasksAPIPlugin/attach'
+      ].join('');
 
-    var uploadurl = [
-      p.SCRIPTURLPATH,
-      '/upload',
-      p.SCRIPTTSUFFIX,
-      '/',
-      wt.web,
-      '.',
-      wt.topic
-    ].join('');
-
-    $.get( keyurl, function( key ) {
-      payload.append("validation_key", key);
-      client.open( "POST", uploadurl );
+      payload.append("id", wt.web + '.' + wt.topic);
+      client.open( "POST", attachurl );
       client.withCredentials = true;
       client.send( payload );
-    });
+    } else {
+      var keyurl = [
+        p.SCRIPTURLPATH,
+        '/rest',
+        p.SCRIPTTSUFFIX,
+        '/DnDUploadPlugin/validation?topic=',
+        wt.web,
+        '.',
+        wt.topic
+      ].join('');
+
+      var uploadurl = [
+        p.SCRIPTURLPATH,
+        '/upload',
+        p.SCRIPTTSUFFIX,
+        '/',
+        wt.web,
+        '.',
+        wt.topic
+      ].join('');
+
+      $.get( keyurl, function( key ) {
+        payload.append("validation_key", key);
+        client.open( "POST", uploadurl );
+        client.withCredentials = true;
+        client.send( payload );
+      });
+    }
   };
 
   var isAutoUpload = function( id ) {
