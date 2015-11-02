@@ -20,6 +20,19 @@
     });
   };
 
+  $.fn.isEmpty = function() {
+    if ( !this.hasClass('qw-dnd-upload') ) {
+      return this;
+    }
+
+    var id = this.data('id') || this.attr('data-id');
+    if (!files[id]) {
+      return true;
+    }
+
+    return files[id].length === 0;
+  };
+
   $.fn.clearQueue = function( suppressEvent ) {
     if ( !this.hasClass('qw-dnd-upload') ) {
       return this;
