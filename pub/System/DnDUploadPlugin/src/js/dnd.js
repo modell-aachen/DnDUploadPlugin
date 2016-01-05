@@ -187,10 +187,11 @@
       $container.find('div.progress').css('width', percent);
 
       // continue with next file
-      if ( val === 100 ) {
+      if ( val === 100 && !lock ) {
         lock = setInterval(function() {
           if (client.readyState === 4) {
             clearInterval(lock);
+            lock = undefined;
             locked = false;
 
             if ( isAutoUpload( id ) ) {
