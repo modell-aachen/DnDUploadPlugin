@@ -98,7 +98,7 @@ STYLE
   <div class="hint">
     <img src="$pluginURL/assets/upload.png" border="0" width="32" height="32" />
     <span>%MAKETEXT{"Click or drag'n drop"}%</span>
-    <input class="qw-file-input" type="file" style="visibility: hidden" multiple="multiple">
+    <input class="qw-file-input" type="file" style="visibility: hidden" multiple="multiple" />
   </div>
   <div class="container"></div>
 </div>
