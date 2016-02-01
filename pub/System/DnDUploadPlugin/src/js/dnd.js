@@ -2,10 +2,17 @@
   'use strict';
 
   $(document).ready( function() {
-    $('body').on('click', '.qw-dnd-upload', handleDnDUpload);
-    $('body').on('dragover', '.qw-dnd-upload', onDrag);
-    $('body').on('dragleave', '.qw-dnd-upload', onDrag);
-    $('body').on('drop', '.qw-dnd-upload', onDrop);
+    var $body = $('body');
+    $body
+      .off('click', '.qw-dnd-upload')
+      .off('dragover', '.qw-dnd-upload')
+      .off('dragleave', '.qw-dnd-upload')
+      .off('drop', '.qw-dnd-upload');
+
+    $body.on('click', '.qw-dnd-upload', handleDnDUpload)
+      .on('dragover', '.qw-dnd-upload', onDrag)
+      .on('dragleave', '.qw-dnd-upload', onDrag)
+      .on('drop', '.qw-dnd-upload', onDrop);
   });
 
   $.fn.upload = function() {
