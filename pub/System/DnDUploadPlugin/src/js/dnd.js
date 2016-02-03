@@ -1,20 +1,6 @@
 ;(function ($, _, document, window, undefined) {
   'use strict';
 
-  $(document).ready( function() {
-    var $body = $('body');
-    $body
-      .off('click', '.qw-dnd-upload')
-      .off('dragover', '.qw-dnd-upload')
-      .off('dragleave', '.qw-dnd-upload')
-      .off('drop', '.qw-dnd-upload');
-
-    $body.on('click', '.qw-dnd-upload', handleDnDUpload)
-      .on('dragover', '.qw-dnd-upload', onDrag)
-      .on('dragleave', '.qw-dnd-upload', onDrag)
-      .on('drop', '.qw-dnd-upload', onDrop);
-  });
-
   $.fn.upload = function() {
     if ( !this.hasClass('qw-dnd-upload') ) {
       return this;
@@ -283,4 +269,13 @@
       console.error( msg );
     }
   };
+
+  var events = {
+    'click.dnd': handleDnDUpload,
+    'dragover.dnd': onDrag,
+    'dragleave.dnd': onDrag,
+    'drop.dnd': onDrop
+  };
+
+  $(document).off('.dnd').on(events, '.qw-dnd-upload');
 }(jQuery, window._, window.document, window));
