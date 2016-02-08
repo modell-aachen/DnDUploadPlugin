@@ -43,6 +43,7 @@ sub tagUpload {
   my $autostart = $params->{autostart};
   my $blockui = $params->{blockui} || 0;
   my $webtopic = $params->{webtopic} || '';
+  my $headonly = $params->{headonly} || 0;
 
   if ( !$webtopic ) {
     $web = $params->{web} || $web;
@@ -91,6 +92,8 @@ SCRIPT
   Foswiki::Func::addToZone( 'head', 'DNDUPLOADPLUGIN::STYLES', <<STYLE );
 <link rel='stylesheet' type='text/css' media='all' href='$pluginURL/css/dndupload$suffix.css' />
 STYLE
+
+  return '' if $headonly;
 
   my $id = Digest::SHA::sha1_hex(time . rand(99999));
   my $div = <<DIV;
