@@ -1,13 +1,6 @@
 ;(function ($, _, document, window, undefined) {
   'use strict';
 
-  $(document).ready( function() {
-    $('body').on('click', '.qw-dnd-upload', handleDnDUpload);
-    $('body').on('dragover', '.qw-dnd-upload', onDrag);
-    $('body').on('dragleave', '.qw-dnd-upload', onDrag);
-    $('body').on('drop', '.qw-dnd-upload', onDrop);
-  });
-
   $.fn.upload = function() {
     if ( !this.hasClass('qw-dnd-upload') ) {
       return this;
@@ -18,6 +11,19 @@
       $this.addClass('auto');
       uploadNext( $this.data('id') || $this.attr('data-id') );
     });
+  };
+
+  $.fn.isEmpty = function() {
+    if ( !this.hasClass('qw-dnd-upload') ) {
+      return this;
+    }
+
+    var id = this.data('id') || this.attr('data-id');
+    if (!files[id]) {
+      return true;
+    }
+
+    return files[id].length === 0;
   };
 
   $.fn.clearQueue = function( suppressEvent ) {
@@ -85,30 +91,6 @@
     var $input = $this.find('input');
     $input.off( 'change', onInputChanged );
     $input.on( 'change', onInputChanged );
-
-    if ( /^(1|on|true|enabled?)$/i.test( $this.attr('data-tasksgrid') ) ) {
-      var $editor = $('#task-editor');
-      var trackerId = $editor.data('trackerId');
-      var $tracker = $('#' + trackerId);
-      $tracker.on( 'beforeEdit', function( evt, task ) {
-        var taskId = task.id;
-        var arr = taskId.split('.');
-        $this.attr('data-web', arr[0]);
-        $this.attr('data-topic', arr[1]);
-      });
-
-      $tracker.on( 'beforeCreate', function() {
-        $editor.find('.twistyPlugin').css('display', 'none');
-      });
-
-      $tracker.on( 'afterSave', function() {
-        $editor.find('.twistyPlugin').css('display', 'block');
-      });
-
-      $tracker.on( 'editCanceled', function() {
-        $editor.find('.twistyPlugin').css('display', 'block');
-      });
-    }
 
     setTimeout(function() {
       $input.trigger('click');
@@ -181,27 +163,28 @@
 
     locked = true;
     var data = files[id].shift();
+    var $container = $(data.container);
+    var p = foswiki.preferences;
     var payload = new FormData();
+
     payload.append("filepath", data.file);
     payload.append("filename", data.file.name);
-    payload.append("filecomment", '');
 
     var client = new XMLHttpRequest();
     client.onerror = error;
     client.onabort = log;
 
-    var $container = $(data.container);
     client.upload.onprogress = function( evt ) {
       var val = Math.round( 100/evt.total * evt.loaded );
       var percent = val + '%';
-
       $container.find('div.progress').css('width', percent);
 
       // continue with next file
-      if ( val === 100 ) {
+      if ( val === 100 && !lock ) {
         lock = setInterval(function() {
           if (client.readyState === 4) {
             clearInterval(lock);
+            lock = undefined;
             locked = false;
 
             if ( isAutoUpload( id ) ) {
@@ -213,33 +196,46 @@
     };
 
     var wt = getWebTopic( id );
-    var p = foswiki.preferences;
-    var keyurl = [
-      p.SCRIPTURLPATH,
-      '/rest',
-      p.SCRIPTTSUFFIX,
-      '/DnDUploadPlugin/validation?topic=',
-      wt.web,
-      '.',
-      wt.topic
-    ].join('');
+    if ( /^1$/.test($dnd.data('tasksgrid')) ) {
+      var attachurl = [
+        p.SCRIPTURLPATH,
+        '/rest',
+        p.SCRIPTTSUFFIX,
+        '/TasksAPIPlugin/attach'
+      ].join('');
 
-    var uploadurl = [
-      p.SCRIPTURLPATH,
-      '/upload',
-      p.SCRIPTTSUFFIX,
-      '/',
-      wt.web,
-      '.',
-      wt.topic
-    ].join('');
-
-    $.get( keyurl, function( key ) {
-      payload.append("validation_key", key);
-      client.open( "POST", uploadurl );
+      payload.append("id", wt.web + '.' + wt.topic);
+      client.open( "POST", attachurl );
       client.withCredentials = true;
       client.send( payload );
-    });
+    } else {
+      var keyurl = [
+        p.SCRIPTURLPATH,
+        '/rest',
+        p.SCRIPTTSUFFIX,
+        '/DnDUploadPlugin/validation?topic=',
+        wt.web,
+        '.',
+        wt.topic
+      ].join('');
+
+      var uploadurl = [
+        p.SCRIPTURLPATH,
+        '/upload',
+        p.SCRIPTTSUFFIX,
+        '/',
+        wt.web,
+        '.',
+        wt.topic
+      ].join('');
+
+      $.get( keyurl, function( key ) {
+        payload.append("validation_key", key);
+        client.open( "POST", uploadurl );
+        client.withCredentials = true;
+        client.send( payload );
+      });
+    }
   };
 
   var isAutoUpload = function( id ) {
@@ -273,4 +269,13 @@
       console.error( msg );
     }
   };
+
+  var events = {
+    'click.dnd': handleDnDUpload,
+    'dragover.dnd': onDrag,
+    'dragleave.dnd': onDrag,
+    'drop.dnd': onDrop
+  };
+
+  $(document).off('.dnd').on(events, '.qw-dnd-upload');
 }(jQuery, window._, window.document, window));
