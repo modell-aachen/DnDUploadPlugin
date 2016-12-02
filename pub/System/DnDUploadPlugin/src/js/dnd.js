@@ -186,6 +186,7 @@
             clearInterval(lock);
             lock = undefined;
             locked = false;
+            client.abort();
 
             if ( isAutoUpload( id ) ) {
               uploadNext( id );
