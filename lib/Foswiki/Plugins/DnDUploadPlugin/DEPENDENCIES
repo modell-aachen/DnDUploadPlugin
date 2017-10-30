@@ -1,3 +1,1 @@
-ONLYIF ( $Foswiki::Plugins::VERSION < 2.3)
-Foswiki::Contrib::PatchFoswikiContrib, >=1.3, perl, Required if your extension vx.x.x style version (recommended).
 Foswiki::Plugins::JQueryPlugin, >=1.0, perl, Required.
