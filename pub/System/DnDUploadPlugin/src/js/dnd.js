@@ -217,7 +217,6 @@
         '/TasksAPIPlugin/attach'
       ].join('');
 
-      client.responseType = 'json';
       client.onload = function () {
         if( client.response.code=='filenamelength_error' ){
           client.errorMessage = client.response;
@@ -227,6 +226,7 @@
 
       payload.append("id", wt.web + '.' + wt.topic);
       client.open( "POST", attachurl );
+      client.responseType = 'json';
       client.withCredentials = true;
       client.send( payload );
     } else {
