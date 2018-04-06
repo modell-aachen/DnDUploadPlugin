@@ -173,6 +173,7 @@
     var client = new XMLHttpRequest();
     client.onerror = error;
     client.onabort = log;
+    client.errorMessage = undefined;
 
     client.upload.onprogress = function( evt ) {
       var val = Math.round( 100/evt.total * evt.loaded );
@@ -188,8 +189,19 @@
             locked = false;
             client.abort();
 
-            if ( isAutoUpload( id ) ) {
-              uploadNext( id );
+            if (typeof client.errorMessage != 'undefined' ) {
+
+              displayError( client.errorMessage.msg, function() {
+                  client.errorMessage = undefined;
+                  if ( isAutoUpload( id ) ) {
+                    uploadNext( id );
+                  }
+              });
+
+            }else{
+              if ( isAutoUpload( id ) ) {
+                uploadNext( id );
+              }
             }
           }
         }, 100);
@@ -205,8 +217,16 @@
         '/TasksAPIPlugin/attach'
       ].join('');
 
+      client.onload = function () {
+        if( client.response.code=='filenamelength_error' ){
+          client.errorMessage = client.response;
+        }
+        return client.response;
+      }
+
       payload.append("id", wt.web + '.' + wt.topic);
       client.open( "POST", attachurl );
+      client.responseType = 'json';
       client.withCredentials = true;
       client.send( payload );
     } else {
@@ -270,6 +290,16 @@
       console.error( msg );
     }
   };
+
+  var displayError = function( errorText, callback ){
+    swal({
+      type: 'error',
+      title: jsi18n.get( 'tasksapi', 'Oops' ),
+      text: errorText,
+      showConfirmButton: true,
+      showCancelButton: false
+    }, callback );
+  }
 
   var events = {
     'click.dnd': handleDnDUpload,
