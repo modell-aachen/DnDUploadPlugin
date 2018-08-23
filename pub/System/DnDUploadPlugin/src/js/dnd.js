@@ -116,6 +116,15 @@
       files[id] = [];
     }
 
+    //since DnDUpload is full coupled to the taskapi, i.e. REST URL, we could also rely on
+    //settings given by the ckeditor used as alternative fileupload
+    //To be safe, fallback to the default foswiki value.
+    var maxFileSize = foswiki.preferences.ckeditor4.config.taskeditor.simpleuploads_maxFileSize || 10000000;
+    if( maxFileSize < file.size ) {
+      displayError("Filesize to large (maximum: " + maxFileSize/1000/1000 + "MB)");
+      return;
+    }
+
     var $container = $('<div class="upload"><span class="title"></span><div class="progress"></div></div>');
     $container.children('.title').text( file.name );
 
@@ -218,7 +227,7 @@
       ].join('');
 
       client.onload = function () {
-        if( client.response.code=='filenamelength_error' ){
+        if(  client.response && client.response.code=='filenamelength_error' ){
           client.errorMessage = client.response;
         }
         return client.response;
@@ -289,6 +298,8 @@
     if ( window.console && console.error ) {
       console.error( msg );
     }
+
+    displayError( jsi18n.get('tasksapi', 'Something went wrong! Try again later.') );
   };
 
   var displayError = function( errorText, callback ){
