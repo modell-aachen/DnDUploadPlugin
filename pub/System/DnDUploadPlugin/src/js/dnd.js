@@ -121,7 +121,7 @@
     //To be safe, fallback to the default foswiki value.
     var maxFileSize = foswiki.preferences.ckeditor4.config.taskeditor.simpleuploads_maxFileSize || 10000000;
     if( maxFileSize < file.size ) {
-      displayError("Filesize to large (maximum: " + maxFileSize/1000/1000 + "MB)");
+      displayError(jsi18n.get('tasksapi', 'file_too_large',  maxFileSize/1000/1000));
       return;
     }
 
