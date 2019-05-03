@@ -111,18 +111,24 @@
   };
 
   var files = {};
+
+  var getMaxFileSize = function() {
+    var maxFileSize;
+    try {
+      maxFileSize = foswiki.preferences.ckeditor4.config.taskeditor.simpleuploads_maxFileSize;
+    }
+    catch(err) {
+      maxFileSize = 10000000;
+    }
+    return maxFileSize;
+  }
+
   var enqueueFile = function( file, id ) {
     if ( !files[id] ) {
       files[id] = [];
     }
 
-    //since DnDUpload is full coupled to the taskapi, i.e. REST URL, we could also rely on
-    //settings given by the ckeditor used as alternative fileupload
-    //To be safe, fallback to the default foswiki value.
-    var maxFileSize = 10000000;
-    if(foswiki.preferences.ckeditor4) {
-        maxFileSize = foswiki.preferences.ckeditor4.config.taskeditor.simpleuploads_maxFileSize;
-    }
+    var maxFileSize = getMaxFileSize();
 
     if( maxFileSize < file.size ) {
       displayError(jsi18n.get('tasksapi', 'file_too_large',  maxFileSize/1000/1000));
